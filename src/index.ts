@@ -56,7 +56,7 @@ export { USDC_DECIMALS };
  *
  * Our server signals 402 as a result with `isError: true` +
  * `structuredContent` (the x402 envelope) + a JSON text fallback
- * (mcp.py `_payment_required_result`, ). Returns the parsed
+ * (mcp.py `_payment_required_result`, §7). Returns the parsed
  * PaymentRequired or null.
  */
 function extractPaymentRequired(result: unknown): PaymentRequired | null {
