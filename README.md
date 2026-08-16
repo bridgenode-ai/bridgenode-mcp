@@ -60,3 +60,11 @@ BRIDGENODE_DAILY_CAP=1.0
 - Website: https://bridgenode.cc
 - Protocol: x402 V2 (docs.x402.org)
 - npm: https://www.npmjs.com/package/@bridgenode/mcp
+
+## Python packages
+
+Prefer Python? The same BridgeNode toolkit is on PyPI:
+
+- **Python SDK:** `pip install bridgenode-llm` → https://pypi.org/project/bridgenode-llm
+- **CLI:** `pip install bridgenode-cli` → https://pypi.org/project/bridgenode-cli
+- **Full toolkit (SDK + CLI):** `pip install bridgenode` → https://pypi.org/project/bridgenode
