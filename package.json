@@ -1,8 +1,8 @@
 {
   "name": "@bridgenode/mcp",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "mcpName": "io.github.applefanaimail-blip/bridgenode-mcp",
-  "description": "BridgeNode MCP wrapper — stdio MCP server proxying to remote streamable-HTTP /mcp with automatic x402 payments (Solana USDC). No API keys.",
+  "description": "BridgeNode MCP wrapper \u2014 stdio MCP server proxying to remote streamable-HTTP /mcp with automatic x402 payments (Solana USDC). No API keys.",
   "type": "module",
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
@@ -58,9 +58,9 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
     "@solana/kit": "^7.1.0",
-    "@x402/core": "~2.22.0",
-    "@x402/mcp": "~2.22.0",
-    "@x402/svm": "~2.22.0",
+    "@x402/core": "~2.23.0",
+    "@x402/mcp": "~2.23.0",
+    "@x402/svm": "~2.23.0",
     "dotenv": "^17.0.0"
   },
   "devDependencies": {
