@@ -1,0 +1,38 @@
+{
+    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+    "name": "io.github.applefanaimail-blip/bridgenode-mcp",
+    "title": "BridgeNode MCP",
+    "description": "BridgeNode \u2014 x402 pay-per-request AI inference. OpenAI-compatible API + MCP server, Solana USDC.",
+    "version": "1.0.11",
+    "websiteUrl": "https://bridgenode.cc",
+    "icons": [
+        {
+            "src": "https://bridgenode.cc/logos/bridgenode.jpg",
+            "mimeType": "image/jpeg",
+            "sizes": [
+                "any"
+            ]
+        }
+    ],
+    "remotes": [
+        {
+            "type": "streamable-http",
+            "url": "https://bridgenode.cc/mcp"
+        }
+    ],
+    "packages": [
+        {
+            "registryType": "npm",
+            "identifier": "@bridgenode/mcp",
+            "version": "1.0.3",
+            "runtimeHint": "npx",
+            "transport": {
+                "type": "stdio"
+            }
+        }
+    ],
+    "repository": {
+        "source": "github",
+        "url": "https://github.com/applefanaimail-blip/bridgenode-mcp"
+    }
+}
