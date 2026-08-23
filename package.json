@@ -1,6 +1,6 @@
 {
   "name": "@bridgenode/mcp",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "mcpName": "io.github.bridgenode-ai/bridgenode-mcp",
   "description": "BridgeNode MCP wrapper \u2014 stdio MCP server proxying to remote streamable-HTTP /mcp with automatic x402 payments (Solana USDC). No API keys.",
   "type": "module",
@@ -39,24 +39,17 @@
     "url": "https://github.com/bridgenode-ai/bridgenode-mcp.git"
   },
   "keywords": [
-    "mcp",
     "x402",
+    "http-402",
+    "agentic-commerce",
+    "pay-per-request",
     "solana",
     "usdc",
-    "bridgenode",
-    "ai",
-    "inference",
-    "llm",
-    "agents",
-    "payment",
-    "pay-per-request",
-    "gasless",
-    "no-api-key",
-    "openai-compatible",
-    "streamable-http",
+    "micropayments",
+    "mcp",
     "mcp-server",
-    "stablecoin",
-    "micropayments"
+    "ai-agents",
+    "bridgenode"
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
