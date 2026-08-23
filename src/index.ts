@@ -186,25 +186,46 @@ async function verifyReceipt(
   }
 }
 
-async function main() {
-  const walletKey = process.env.BRIDGENODE_WALLET_KEY;
-  if (!walletKey) {
-    console.error(
-      "BRIDGENODE_WALLET_KEY missing — set it in .env (Solana wallet private key, base58)"
-    );
-    process.exit(1);
+/**
+ * Lazy payment client — created only when a payment is actually needed.
+ *
+ * Server startup NEVER depends on a valid wallet key: a missing or malformed
+ * BRIGDENODE_WALLET_KEY must not crash the server (Glama build test starts
+ * the server with a placeholder key). Payments without a valid key fail
+ * closed with a clear tool error instead — fail-closed is preserved because
+ * no payment is ever signed with an invalid key (§1090 spending policy).
+ */
+let paymentClientPromise: Promise<{
+  paymentClient: ReturnType<x402Client["register"]>;
+  walletAddress: string;
+}> | null = null;
+
+function getPaymentClient() {
+  if (paymentClientPromise === null) {
+    paymentClientPromise = (async () => {
+      const walletKey = process.env.BRIDGENODE_WALLET_KEY;
+      if (!walletKey) {
+        throw new Error(
+          "BRIDGENODE_WALLET_KEY missing — set it in .env (Solana wallet private key, base58)"
+        );
+      }
+
+      // Wallet address — from the private key (base58 → 64 bytes → keypair signer)
+      const secretKey = new Uint8Array(getBase58Encoder().encode(walletKey));
+      const signer = await createKeyPairSignerFromBytes(secretKey);
+
+      // x402 payment client (Solana mainnet, exact scheme)
+      const paymentClient = new x402Client().register(
+        NETWORK,
+        new ExactSvmScheme(signer)
+      );
+      return { paymentClient, walletAddress: signer.address };
+    })();
   }
+  return paymentClientPromise;
+}
 
-  // Wallet address — from the private key (base58 → 64 bytes → keypair signer)
-  const secretKey = new Uint8Array(getBase58Encoder().encode(walletKey));
-  const signer = await createKeyPairSignerFromBytes(secretKey);
-
-  // x402 payment client (Solana mainnet, exact scheme)
-  const paymentClient = new x402Client().register(
-    NETWORK,
-    new ExactSvmScheme(signer)
-  );
-
+async function main() {
   // MCP client → remote bridgenode.cc/mcp (streamable HTTP)
   const mcpClient = new Client(
     { name: "bridgenode-mcp", version: "0.1.0" },
@@ -258,6 +279,18 @@ async function main() {
       }
 
       // Sign the payment and retry with it attached (x402 V2 `_meta`)
+      // Lazy client: invalid/missing wallet key → clear tool error, no crash
+      let paymentClient: ReturnType<x402Client["register"]>;
+      let walletAddress: string;
+      try {
+        const pc = await getPaymentClient();
+        paymentClient = pc.paymentClient;
+        walletAddress = pc.walletAddress;
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        console.error(message);
+        return { content: [{ type: "text", text: message }], isError: true };
+      }
       const payload = await paymentClient.createPaymentPayload(paymentRequired);
       result = await mcpClient.callTool({
         name,
@@ -270,7 +303,7 @@ async function main() {
       const settle = extractPaymentResponseFromMeta(result as never);
       if (settle !== null && settle !== undefined) {
         try {
-          await verifyReceipt(payload, settle, signer.address);
+          await verifyReceipt(payload, settle, walletAddress);
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err);
           console.error(`Receipt verification failed: ${message}`);
