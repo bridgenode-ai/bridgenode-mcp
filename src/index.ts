@@ -18,7 +18,10 @@
  * a tool declares an outputSchema (our server does) — found by e2e 08-15.
  */
 import * as dotenv from "dotenv";
-dotenv.config();
+// quiet: true — dotenv v17 prints "tips" to STDOUT, which corrupts the
+// stdio MCP protocol (mcp-proxy parses stdout as JSON-RPC and crashes on
+// the non-JSON prefix like "{ quiet: true }").
+dotenv.config({ quiet: true });
 
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
