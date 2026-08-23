@@ -1,7 +1,7 @@
 {
   "name": "@bridgenode/mcp",
   "version": "1.0.3",
-  "mcpName": "io.github.applefanaimail-blip/bridgenode-mcp",
+  "mcpName": "io.github.bridgenode-ai/bridgenode-mcp",
   "description": "BridgeNode MCP wrapper \u2014 stdio MCP server proxying to remote streamable-HTTP /mcp with automatic x402 payments (Solana USDC). No API keys.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -33,7 +33,7 @@
   "homepage": "https://bridgenode.cc",
   "repository": {
     "type": "git",
-    "url": "https://github.com/applefanaimail-blip/bridgenode-mcp.git"
+    "url": "https://github.com/bridgenode-ai/bridgenode-mcp.git"
   },
   "keywords": [
     "mcp",
@@ -74,7 +74,7 @@
   },
   "author": "BridgeNode <eli.BNx@proton.me>",
   "bugs": {
-    "url": "https://github.com/applefanaimail-blip/bridgenode-mcp/issues"
+    "url": "https://github.com/bridgenode-ai/bridgenode-mcp/issues"
   },
   "funding": {
     "type": "individual",

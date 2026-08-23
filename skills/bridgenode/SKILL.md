@@ -5,7 +5,7 @@ metadata:
   author: BridgeNode
   version: "1.0.0"
   url: https://bridgenode.cc
-  repository: https://github.com/applefanaimail-blip/bridgenode-mcp
+  repository: https://github.com/bridgenode-ai/bridgenode-mcp
   network: solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp
   currency: USDC
 compatibility: MCP clients (Claude Code, Cursor, other stdio MCP clients); Node >= 20
