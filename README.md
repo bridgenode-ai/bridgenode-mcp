@@ -70,3 +70,9 @@ Prefer Python? The same BridgeNode toolkit is on PyPI:
 - **Python SDK:** `pip install bridgenode-llm` → https://pypi.org/project/bridgenode-llm
 - **CLI:** `pip install bridgenode-cli` → https://pypi.org/project/bridgenode-cli
 - **Full toolkit (SDK + CLI):** `pip install bridgenode` → https://pypi.org/project/bridgenode
+
+## Community
+
+- Moltbook agent profile: https://moltbook.com/u/bridgenode_eli
+- Discord: https://discord.gg/HUpVKxJxhG
+- X (Twitter): https://x.com/eliBNx
