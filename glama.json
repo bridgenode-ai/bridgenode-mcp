@@ -1,6 +1,4 @@
 {
   "$schema": "https://glama.ai/mcp/schemas/server.json",
-  "maintainers": [
-    "applefanaimail-blip"
-  ]
+  "maintainers": ["bridgenode-ai"]
 }
