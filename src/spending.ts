@@ -52,6 +52,10 @@ export function amountUsdAtomic(amountAtomic: string | undefined): number {
 
 /** Record spend for a settled payment (idempotent per payment by caller). */
 export function recordSpend(amountUsd: number): void {
+  // P1-4: never poison the daily counter with NaN/negative (fail-closed).
+  if (!Number.isFinite(amountUsd) || amountUsd <= 0) {
+    return;
+  }
   rolloverIfNeeded();
   _spentTodayUsd += amountUsd;
 }
@@ -69,6 +73,13 @@ export function spentTodayUsd(): number {
  * it is allowed. Called BEFORE a payment is made (onPaymentRequested).
  */
 export function allowPayment(amountUsd: number): string | null {
+  // P1-4: fail-closed — NaN/negative/zero/Infinity must never pass
+  // (`NaN > cap` is false → NaN would slip through the cap checks).
+  if (!Number.isFinite(amountUsd) || amountUsd <= 0) {
+    return (
+      `Payment ${amountUsd} USD is not a valid positive amount — blocked`
+    );
+  }
   if (amountUsd > MAX_PER_CALL_USD) {
     return (
       `Payment ${amountUsd} USD exceeds BRIDGENODE_MAX_PER_CALL ` +

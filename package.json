@@ -1,8 +1,8 @@
 {
   "name": "@bridgenode/mcp",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "mcpName": "io.github.bridgenode-ai/bridgenode-mcp",
-  "description": "BridgeNode MCP wrapper \u2014 stdio MCP server proxying to remote streamable-HTTP /mcp with automatic x402 payments (Solana USDC). No API keys.",
+  "description": "BridgeNode MCP wrapper — stdio MCP server proxying to remote streamable-HTTP /mcp with automatic x402 payments (Solana USDC). No API keys.",
   "type": "module",
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",

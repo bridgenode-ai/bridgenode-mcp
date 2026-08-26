@@ -52,6 +52,28 @@ test("allowPayment: payment at/under per-call cap is allowed", () => {
   assert.equal(allowPayment(0.001), null);
 });
 
+test("allowPayment: NaN/negative/zero/Infinity are blocked (P1-4)", () => {
+  // `NaN > cap` is false → without the isFinite guard NaN would slip through.
+  assert.ok(allowPayment(Number.NaN) !== null);
+  assert.ok(allowPayment(-0.01) !== null);
+  assert.ok(allowPayment(0) !== null);
+  assert.ok(allowPayment(Number.POSITIVE_INFINITY) !== null);
+  assert.ok(allowPayment(Number.NEGATIVE_INFINITY) !== null);
+});
+
+test("recordSpend: NaN/negative never poison the counter (P1-4)", () => {
+  assert.equal(spentTodayUsd(), 0);
+  recordSpend(Number.NaN);
+  recordSpend(-5);
+  recordSpend(0);
+  recordSpend(Number.POSITIVE_INFINITY);
+  assert.equal(spentTodayUsd(), 0);
+
+  // Valid spend still records normally.
+  recordSpend(0.05);
+  assert.ok(Math.abs(spentTodayUsd() - 0.05) < 1e-9, `got ${spentTodayUsd()}`);
+});
+
 test("allowPayment: payment above per-call cap is blocked", () => {
   const reason = allowPayment(0.051);
   assert.ok(reason !== null);
