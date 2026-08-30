@@ -61,7 +61,7 @@ export { USDC_DECIMALS };
  *
  * Our server signals 402 as a result with `isError: true` +
  * `structuredContent` (the x402 envelope) + a JSON text fallback
- * (mcp.py `_payment_required_result`, §7). Returns the parsed
+ * (mcp.py `_payment_required_result`). Returns the parsed
  * PaymentRequired or null.
  */
 function extractPaymentRequired(result: unknown): PaymentRequired | null {
@@ -90,7 +90,7 @@ function extractPaymentRequired(result: unknown): PaymentRequired | null {
 }
 
 /**
- * Fail-closed payment requirement selection (item 36, §5.6/§8.2).
+ * Fail-closed payment requirement selection.
  *
  * Picks the FIRST accepts entry that is exact + Solana mainnet + USDC.
  * The x402 client's ExactSvmScheme selects a supported entry by
@@ -120,7 +120,7 @@ function selectPaymentRequirement(paymentRequired: PaymentRequired): PaymentRequ
 
 /**
  * Verify the PAYMENT-RESPONSE receipt against OUR payment payload
- * (Free-Riding protection, §8.4) — ported from sdk-ts `_verifyReceipt`.
+ * (Free-Riding protection) — ported from sdk-ts `_verifyReceipt`.
  *
  * `transaction` = the fee payer's Ed25519 signature over OUR TX message;
  * the server must prove it settled EXACTLY our TX. Any mismatch → error
@@ -196,7 +196,7 @@ async function verifyReceipt(
  * BRIGDENODE_WALLET_KEY must not crash the server (Glama build test starts
  * the server with a placeholder key). Payments without a valid key fail
  * closed with a clear tool error instead — fail-closed is preserved because
- * no payment is ever signed with an invalid key (§1090 spending policy).
+ * no payment is ever signed with an invalid key (spending policy).
  */
 let paymentClientPromise: Promise<{
   paymentClient: ReturnType<x402Client["register"]>;
@@ -263,7 +263,7 @@ async function main() {
     // 402 detection: server returns isError:true + structuredContent envelope
     const paymentRequired = extractPaymentRequired(result);
     if (paymentRequired !== null) {
-      // Fail-closed asset/network check BEFORE signing (item 36, §5.6/§8.2)
+      // Fail-closed asset/network check BEFORE signing
       let requirement;
       try {
         requirement = selectPaymentRequirement(paymentRequired);
@@ -301,8 +301,8 @@ async function main() {
         _meta: { [MCP_PAYMENT_META_KEY]: payload },
       } as never);
 
-      // Verify the receipt BEFORE recording spend (Free-Riding protection,
-      // §8.4) — fee payer signature must match OUR TX message
+      // Verify the receipt BEFORE recording spend (Free-Riding protection) —
+      // fee payer signature must match OUR TX message
       const settle = extractPaymentResponseFromMeta(result as never);
       if (settle !== null && settle !== undefined) {
         try {
