@@ -84,5 +84,8 @@
         "path": "./skills/bridgenode"
       }
     ]
+  },
+  "overrides": {
+    "esbuild": "^0.28.1"
   }
 }
