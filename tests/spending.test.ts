@@ -18,6 +18,7 @@ import {
   allowPayment,
   amountUsdAtomic,
   recordSpend,
+  releaseSpendReservation,
   spentTodayUsd,
   rolloverIfNeeded,
   resetSpendState,
@@ -36,6 +37,38 @@ test("USDC_DECIMALS is 6 (atomic units)", () => {
 test("defaults are fail-closed: 0.05 per call, 1.0 per day", () => {
   assert.equal(MAX_PER_CALL_USD, 0.05);
   assert.equal(DAILY_CAP_USD, 1.0);
+});
+
+test("C3: garbage env values fall back to defaults (fail-closed)", async () => {
+  // Env is read at module load — verify in a subprocess with garbage values:
+  // Number("abc") → NaN would disable both caps silently (fail-open); the
+  // fix validates at load and falls back to the defaults.
+  const { execFile } = await import("node:child_process");
+  const { promisify } = await import("node:util");
+  const run = promisify(execFile);
+
+  const script = `
+    import { MAX_PER_CALL_USD, DAILY_CAP_USD, allowPayment } from "./src/spending.ts";
+    console.log(JSON.stringify({ max: MAX_PER_CALL_USD, cap: DAILY_CAP_USD, blocked: allowPayment(0.5) }));
+  `;
+  const { stdout } = await run(
+    process.execPath,
+    ["--experimental-strip-types", "--input-type=module", "-e", script],
+    {
+      cwd: process.cwd(),
+      env: {
+        ...process.env,
+        BRIDGENODE_MAX_PER_CALL: "abc",
+        BRIDGENODE_DAILY_CAP: "0,05",  // comma typo — also garbage
+      },
+    },
+  );
+  const out = JSON.parse(stdout.trim().split(/\n/).pop()!);
+  // Defaults restored — the 0.5 USD payment is blocked (per-call cap 0.05)
+  assert.equal(out.max, 0.05);
+  assert.equal(out.cap, 1.0);
+  assert.ok(out.blocked !== null);
+  assert.match(out.blocked, /exceeds BRIDGENODE_MAX_PER_CALL/);
 });
 
 test("amountUsdAtomic converts atomic USDC to USD", () => {
@@ -122,5 +155,49 @@ test("spending resets on UTC day rollover", () => {
 
   // Next UTC day → rollover resets the counter.
   rolloverIfNeeded(new Date("2026-01-02T12:00:00Z"));
+  assert.equal(spentTodayUsd(), 0);
+});
+
+test("C1: reservation on approval blocks a concurrent call over the cap", () => {
+  // Simulates two parallel tool calls: the first passes allowPayment and
+  // RESERVES its spend synchronously (before the network round-trip); the
+  // second must then be blocked by the daily cap even though the first
+  // payment has not settled yet.
+  resetSpendState();
+
+  // First call: approved + reserved on approval — 24 × 0.04 = 0.96 of the
+  // 1.0 daily cap (each below the 0.05 per-call cap).
+  for (let i = 0; i < 24; i++) {
+    assert.equal(allowPayment(0.04), null);
+    recordSpend(0.04);  // reserve on approval (C1)
+  }
+  assert.ok(Math.abs(spentTodayUsd() - 0.96) < 1e-9,
+            `got ${spentTodayUsd()}`);
+
+  // Second parallel call arrives before the first settles: 0.96 + 0.05 > 1.0
+  // → blocked by the daily cap (reservation alone, nothing settled yet).
+  const reason = allowPayment(0.05);
+  assert.ok(reason !== null);
+  assert.match(reason!, /exceed BRIDGENODE_DAILY_CAP/);
+});
+
+test("C1: releaseSpendReservation frees the cap when receipt not confirmed", () => {
+  resetSpendState();
+
+  // Reserved on approval, then the receipt failed to verify → release.
+  assert.equal(allowPayment(0.04), null);
+  recordSpend(0.04);
+  assert.ok(Math.abs(spentTodayUsd() - 0.04) < 1e-9);
+  releaseSpendReservation(0.04);
+  assert.equal(spentTodayUsd(), 0);
+
+  // Cap is usable again for the retry.
+  assert.equal(allowPayment(0.04), null);
+
+  // Never goes negative / ignores garbage (P1-4 fail-closed).
+  releaseSpendReservation(Number.NaN);
+  releaseSpendReservation(-5);
+  releaseSpendReservation(0);
+  releaseSpendReservation(Number.POSITIVE_INFINITY);
   assert.equal(spentTodayUsd(), 0);
 });

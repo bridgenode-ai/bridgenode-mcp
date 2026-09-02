@@ -46,8 +46,14 @@ import {
   allowPayment,
   amountUsdAtomic,
   recordSpend,
+  releaseSpendReservation,
   spentTodayUsd,
 } from "./spending.js";
+
+// Single source of truth (§9): Client/Server version = package.json version
+// (was hardcoded "0.1.0" while the package was already 1.0.6 — fix.md 5.1).
+import pkg from "../package.json" with { type: "json" };
+const MCP_VERSION = pkg.version;
 
 export const REMOTE_MCP_URL =
   process.env.BRIDGENODE_MCP_URL ?? "https://bridgenode.cc/mcp";
@@ -231,7 +237,7 @@ function getPaymentClient() {
 async function main() {
   // MCP client → remote bridgenode.cc/mcp (streamable HTTP)
   const mcpClient = new Client(
-    { name: "bridgenode-mcp", version: "0.1.0" },
+    { name: "bridgenode-mcp", version: MCP_VERSION },
     { capabilities: {} }
   );
 
@@ -242,7 +248,7 @@ async function main() {
 
   // stdio MCP server — proxy to remote
   const server = new Server(
-    { name: "bridgenode-mcp", version: "0.1.0" },
+    { name: "bridgenode-mcp", version: MCP_VERSION },
     { capabilities: { tools: {} } }
   );
 
@@ -281,6 +287,13 @@ async function main() {
         return { content: [{ type: "text", text: reason }], isError: true };
       }
 
+      // C1 (fix.md): reserve the spend on approval — synchronously, BEFORE
+      // the network round-trip — so two parallel calls cannot both pass the
+      // daily cap check (previously recordSpend ran only after the round-trip;
+      // both calls saw the same unreserved counter). Released below if the
+      // receipt does not confirm the payment.
+      recordSpend(amount);
+
       // Sign the payment and retry with it attached (x402 V2 `_meta`)
       // Lazy client: invalid/missing wallet key → clear tool error, no crash
       let paymentClient: ReturnType<x402Client["register"]>;
@@ -290,6 +303,7 @@ async function main() {
         paymentClient = pc.paymentClient;
         walletAddress = pc.walletAddress;
       } catch (err) {
+        releaseSpendReservation(amount);  // C1: no payment was made
         const message = err instanceof Error ? err.message : String(err);
         console.error(message);
         return { content: [{ type: "text", text: message }], isError: true };
@@ -301,13 +315,15 @@ async function main() {
         _meta: { [MCP_PAYMENT_META_KEY]: payload },
       } as never);
 
-      // Verify the receipt BEFORE recording spend (Free-Riding protection) —
-      // fee payer signature must match OUR TX message
+      // Verify the receipt (Free-Riding protection) — fee payer signature
+      // must match OUR TX message. The spend was already reserved on approval
+      // (C1); the receipt only confirms it. On failure → release.
       const settle = extractPaymentResponseFromMeta(result as never);
       if (settle !== null && settle !== undefined) {
         try {
           await verifyReceipt(payload, settle, walletAddress);
         } catch (err) {
+          releaseSpendReservation(amount);  // C1: receipt not confirmed
           const message = err instanceof Error ? err.message : String(err);
           console.error(`Receipt verification failed: ${message}`);
           return {
@@ -318,9 +334,19 @@ async function main() {
             isError: true,
           };
         }
-        recordSpend(amount);
         console.error(
           `Spend recorded: ${amount} USD (today ${spentTodayUsd().toFixed(4)} / ${DAILY_CAP_USD} USD)`
+        );
+      }
+      // C4 (fix.md): 200 without a PAYMENT-RESPONSE receipt — the payment
+      // went through but the receipt is missing. The spend was already
+      // reserved on approval (C1) and the reservation stays (fail-closed —
+      // the cap must not be reused for an unconfirmed payment); warn so an
+      // operator notices the server is not sending receipts (observability).
+      if (settle === null || settle === undefined) {
+        console.error(
+          `WARNING: 200 without PAYMENT-RESPONSE receipt — ${amount} USD ` +
+          `kept reserved (fail-closed; spent today ${spentTodayUsd().toFixed(4)} / ${DAILY_CAP_USD} USD)`
         );
       }
     }

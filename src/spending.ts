@@ -8,15 +8,35 @@
  * - Per-call cap: BRIDGENODE_MAX_PER_CALL (default 0.05 USD) — a single
  *   payment above this is blocked BEFORE the payment is made.
  * - Daily cap: BRIDGENODE_DAILY_CAP (default 1.0 USD) — cumulative spend
- *   is tracked per UTC day; spend is reserved on approval and recorded
- *   after a payment is actually submitted (settleResponse present).
+ *   is tracked per UTC day; spend is RESERVED on approval (C1: before the
+ *   network round-trip, so parallel calls cannot both pass the cap) and
+ *   released again if the payment is not confirmed (receipt failure).
  * - Fail-closed: any blocked payment returns an error reason (null = OK).
  */
 
 export const USDC_DECIMALS = 6;
 
-export const MAX_PER_CALL_USD = Number(process.env.BRIDGENODE_MAX_PER_CALL ?? 0.05);
-export const DAILY_CAP_USD = Number(process.env.BRIDGENODE_DAILY_CAP ?? 1.0);
+// C3 (fix.md): garbage env ("abc", "0,05" with a comma) would produce NaN →
+// `amount > NaN` is always false → BOTH limits silently disabled (fail-open).
+// Validate at module load: non-finite → fall back to the default + warn, so a
+// typo can never silently turn the spending policy off.
+function _envUsd(name: string, fallback: number): number {
+  const raw = process.env[name];
+  if (raw === undefined) {
+    return fallback;
+  }
+  const value = Number(raw);
+  if (!Number.isFinite(value) || value <= 0) {
+    console.error(
+      `[bridgenode-mcp] WARNING: invalid ${name}=${JSON.stringify(raw)} — ` +
+      `falling back to default ${fallback} USD (spending policy stays ON)`);
+    return fallback;
+  }
+  return value;
+}
+
+export const MAX_PER_CALL_USD = _envUsd("BRIDGENODE_MAX_PER_CALL", 0.05);
+export const DAILY_CAP_USD = _envUsd("BRIDGENODE_DAILY_CAP", 1.0);
 
 // Daily spend tracking (UTC day rollover).
 let _spendDayUtc = "";
@@ -58,6 +78,20 @@ export function recordSpend(amountUsd: number): void {
   }
   rolloverIfNeeded();
   _spentTodayUsd += amountUsd;
+}
+
+/**
+ * C1 (fix.md): release a spend reservation when the payment is NOT
+ * confirmed (receipt verification failed / payment could not be made) —
+ * the daily cap must not stay consumed by an unconfirmed payment.
+ */
+export function releaseSpendReservation(amountUsd: number): void {
+  // P1-4: never corrupt the counter with NaN/negative (fail-closed).
+  if (!Number.isFinite(amountUsd) || amountUsd <= 0) {
+    return;
+  }
+  rolloverIfNeeded();
+  _spentTodayUsd = Math.max(0, _spentTodayUsd - amountUsd);
 }
 
 /** Current spend today in USD (after rollover). */

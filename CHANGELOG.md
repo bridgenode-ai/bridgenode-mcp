@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.7](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.6...mcp-v1.0.7) (2026-09-01)
+
+
+### Bug Fixes
+
+* **mcp:** reserve daily spend on approval — no race (C1) ([7362051](https://github.com/bridgenode-ai/bridgenode-llm/commit/73620512668d31180d52d622b397df4a2a5097aa))
+* **mcp:** sync server.json description with config + CI drift check (V7) ([d2d0c1c](https://github.com/bridgenode-ai/bridgenode-llm/commit/d2d0c1c130a6f81b42998c40fae72b1a8d86ae04))
+* **mcp:** use package.json version in Client/Server (fix.md 5.1) ([04a0129](https://github.com/bridgenode-ai/bridgenode-llm/commit/04a0129dd8686de3373b4a7c2e5a0f1d130c6585))
+* **mcp:** validate spending env at load — fail-closed (C3) ([f777f16](https://github.com/bridgenode-ai/bridgenode-llm/commit/f777f16f99f327850f42177b0f50b31d28afe0ed))
+* **mcp:** warn when 200 arrives without PAYMENT-RESPONSE receipt (C4) ([72112c3](https://github.com/bridgenode-ai/bridgenode-llm/commit/72112c3a493f3296a4ca560eb8618bc0da8d01b1))
+
 ## [1.0.6](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.5...mcp-v1.0.6) (2026-08-31)
 
 
