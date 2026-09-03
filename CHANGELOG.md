@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.8](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.7...mcp-v1.0.8) (2026-09-03)
+
+
+### Bug Fixes
+
+* **mcp:** short mcp_description (≤100 chars) for MCP registry publish ([0102267](https://github.com/bridgenode-ai/bridgenode-llm/commit/01022670217cd141f9f99972fca357219eea890f))
+
 ## [1.0.7](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.6...mcp-v1.0.7) (2026-09-01)
 
 
