@@ -1,6 +1,6 @@
 {
   "name": "@bridgenode/mcp",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "mcpName": "io.github.bridgenode-ai/bridgenode-mcp",
   "description": "BridgeNode MCP wrapper — stdio MCP server proxying to remote streamable-HTTP /mcp with automatic x402 payments (Solana USDC). No API keys.",
   "type": "module",
@@ -55,9 +55,9 @@
     "@modelcontextprotocol/sdk": "^1.30.0",
     "@solana/kit": "^8.2.0",
     "@solana/transactions": "^8.2.0",
-    "@x402/core": "~2.24.0",
-    "@x402/mcp": "~2.24.0",
-    "@x402/svm": "~2.24.0",
+    "@x402/core": "~2.25.0",
+    "@x402/mcp": "~2.25.0",
+    "@x402/svm": "~2.25.0",
     "dotenv": "^17.0.0"
   },
   "devDependencies": {

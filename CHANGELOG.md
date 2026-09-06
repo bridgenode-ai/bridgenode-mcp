@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.10](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.9...mcp-v1.0.10) (2026-09-06)
+
+
+### Bug Fixes
+
+* **deps:** mcp [@x402](https://github.com/x402) 2.25.0 + @types/node 26.4.1 ([781b1a8](https://github.com/bridgenode-ai/bridgenode-llm/commit/781b1a8e6d630eba4423ae1ff4001db9b6594c4a))
+
 ## [1.0.9](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.8...mcp-v1.0.9) (2026-09-03)
 
 
