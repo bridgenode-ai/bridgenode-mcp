@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.11](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.10...mcp-v1.0.11) (2026-09-07)
+
+
+### Bug Fixes
+
+* **glama:** maintainers use GitHub username (BridgeNode-cc) for claim ([9598ef6](https://github.com/bridgenode-ai/bridgenode-llm/commit/9598ef6d29a2a875373d48f91b2b5bb02c6a3db3))
+
 ## [1.0.10](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.9...mcp-v1.0.10) (2026-09-06)
 
 
