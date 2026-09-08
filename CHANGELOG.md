@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.12](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.11...mcp-v1.0.12) (2026-09-08)
+
+
+### Bug Fixes
+
+* **mcp:** emit type declarations via tsc, typescript 7 ([680e6b1](https://github.com/bridgenode-ai/bridgenode-llm/commit/680e6b165689dfa4c11ac2627a12a7b310b5bbae))
+
 ## [1.0.11](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.10...mcp-v1.0.11) (2026-09-07)
 
 
