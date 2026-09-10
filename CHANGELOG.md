@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.14](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.13...mcp-v1.0.14) (2026-09-10)
+
+
+### Bug Fixes
+
+* **mcp:** point a wallet-less agent at the free path ([a46d371](https://github.com/bridgenode-ai/bridgenode-llm/commit/a46d371a60449eea88f13e8e92780cb3c8076ff0))
+
 ## [1.0.13](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.12...mcp-v1.0.13) (2026-09-10)
 
 

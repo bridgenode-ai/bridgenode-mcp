@@ -39,14 +39,14 @@ Or manually:
 ## Environment
 
 ```bash
-BRIDGENODE_WALLET_KEY=***            # required — Solana wallet private key (base58)
+BRIDGENODE_WALLET_KEY=***            # OPTIONAL — needed only once the free path is used up
 BRIDGENODE_MAX_PER_CALL=0.05         # optional — max USD per call (fail-closed)
 BRIDGENODE_DAILY_CAP=1.0             # optional — max USD per day (fail-closed)
 ```
 
 ## Tools
 
-- `chat_completions` — AI inference (paid; x402 payment automatic)
+- `chat_completions` — AI inference (free models run without payment; the first 2 calls to a PAID model are free per client, then x402 payment is automatic)
 - `list_models` — model list with live prices (free)
 - `get_price_estimate` — estimate cost of a chat request (free)
 
@@ -57,6 +57,12 @@ BRIDGENODE_DAILY_CAP=1.0             # optional — max USD per day (fail-closed
 3. On `tools/call` receiving 402 (payment required) — the wrapper automatically signs the payment with `BRIDGENODE_WALLET_KEY` and retries
 4. Spending policy checks every payment BEFORE signing (fail-closed)
 
+## Free access (start here)
+
+- **Free models** (`list_models` → `"free": true`) run without payment — no wallet, no 402.
+- **Free trials:** a client that has never called BridgeNode gets **2 free calls on PAID models**, then the third call returns the 402 offer (`extensions.bridgenode`: free models, trials left, `how_to_pay`, `docs`).
+- `BRIDGENODE_WALLET_KEY` is read lazily — it is required only when a call actually reaches the payment wall.
+
 ## Cost warning
 
-This wrapper spends real USDC on every paid tool call (on-chain x402 micropayment). Check `list_models` for live prices first, set spending caps, and keep the wallet funded.
+This wrapper spends real USDC on paid tool calls once the free path is used up (on-chain x402 micropayment). Check `list_models` for live prices first, set spending caps, and keep the wallet funded.

@@ -8,7 +8,9 @@
  * Usage (one-command install):
  *   claude mcp add bridgenode -s user -- npx -y @bridgenode/mcp@latest
  *
- * Key: .env (`BRIDGENODE_WALLET_KEY` — Solana wallet private key, base58).
+ * Key: .env (`BRIDGENODE_WALLET_KEY` — Solana wallet private key, base58) —
+ * LAZY: free models and the 2 free calls on paid models per client need no
+ * wallet, so a call is only paid once it actually reaches the 402 wall.
  * Spending policy (fail-closed): BRIDGENODE_MAX_PER_CALL (0.05 USD),
  * BRIDGENODE_DAILY_CAP (1.0 USD) — before every payment.
  *
@@ -215,7 +217,10 @@ function getPaymentClient() {
       const walletKey = process.env.BRIDGENODE_WALLET_KEY;
       if (!walletKey) {
         throw new Error(
-          "BRIDGENODE_WALLET_KEY missing — set it in .env (Solana wallet private key, base58)"
+          "This call needs payment (free models and the free trials are used " +
+          "up). Set BRIDGENODE_WALLET_KEY in .env — your Solana wallet " +
+          "private key (base58) — or call a free model: list_models marks " +
+          "them with \"free\": true."
         );
       }
 

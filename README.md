@@ -8,7 +8,7 @@
 [![BridgeNode on x402-list](https://x402-list.com/badge/bridgenode.svg)](https://x402-list.com/services/bridgenode?utm_source=badge&utm_medium=referral&utm_campaign=embed)
 [![GitHub Stars](https://img.shields.io/github/stars/bridgenode-ai/bridgenode-mcp?style=social)](https://github.com/bridgenode-ai/bridgenode-mcp)
 
-**Built for AI agents** — no API keys, no registration, pay-as-you-go with Solana USDC via x402.
+**Built for AI agents** — no API keys, no registration, pay-as-you-go with Solana USDC via x402. Start free: free models and 2 free calls on paid models per client, no wallet required.
 
 BridgeNode MCP wrapper — stdio MCP server that proxies requests to the remote
 `https://bridgenode.cc/mcp` (streamable-HTTP) with **automatic x402 payment**
@@ -37,6 +37,8 @@ Or manually (Claude Code, Cursor, other MCP clients):
 
 ```bash
 # Solana wallet private key (base58) — agent's payment wallet
+# Optional — Solana wallet private key (base58). Needed only for PAID calls:
+# free models and the 2 free trials work without it.
 BRIDGENODE_WALLET_KEY=
 
 # Spending policy (fail-closed)
@@ -46,7 +48,7 @@ BRIDGENODE_DAILY_CAP=1.0
 
 ## Tools
 
-- `chat_completions` — AI inference (paid; x402 payment automatic)
+- `chat_completions` — AI inference (free models run without payment; the first 2 calls to a PAID model are free per client, then x402 payment is automatic)
 - `list_models` — model list (free)
 - `get_price_estimate` — estimate cost of a chat request (free)
 
