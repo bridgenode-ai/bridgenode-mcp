@@ -87,7 +87,7 @@ test(
       const result = await client.callTool({
         name: "chat_completions",
         arguments: {
-          model: "deepseek-v4-flash",
+          model: "deepseek-flash",
           messages: [{ role: "user", content: "Reply with exactly: e2e ok" }],
           max_tokens: 32,
         },

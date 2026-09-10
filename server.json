@@ -3,7 +3,7 @@
     "name": "io.github.bridgenode-ai/bridgenode-mcp",
     "title": "BridgeNode MCP",
     "description": "BridgeNode — x402 pay-per-request AI inference. OpenAI-compatible API + MCP, Solana USDC, gas-free.",
-    "version": "1.4.1",
+    "version": "1.5.5",
     "websiteUrl": "https://bridgenode.cc",
     "icons": [
         {
@@ -24,7 +24,7 @@
         {
             "registryType": "npm",
             "identifier": "@bridgenode/mcp",
-            "version": "1.0.12",
+            "version": "1.0.13",
             "runtimeHint": "npx",
             "transport": {
                 "type": "stdio"

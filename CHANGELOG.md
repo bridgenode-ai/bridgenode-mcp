@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.13](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.12...mcp-v1.0.13) (2026-09-10)
+
+
+### Bug Fixes
+
+* **server:** serve DeepSeek V4.1 Flash under its official id (deepseek-flash) ([38ab6e3](https://github.com/bridgenode-ai/bridgenode-llm/commit/38ab6e3d6f9af9d78c467465212370205e8b1af3))
+
 ## [1.0.12](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.11...mcp-v1.0.12) (2026-09-08)
 
 
