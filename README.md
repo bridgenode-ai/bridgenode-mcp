@@ -6,6 +6,7 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/bridgenode-ai/bridgenode-mcp/ci.yml)](https://github.com/bridgenode-ai/bridgenode-mcp/actions)
 [![Website](https://img.shields.io/badge/Website-bridgenode.cc-blue)](https://bridgenode.cc)
 [![BridgeNode on x402-list](https://x402-list.com/badge/bridgenode.svg)](https://x402-list.com/services/bridgenode?utm_source=badge&utm_medium=referral&utm_campaign=embed)
+[![@bridgenode/mcp on AI Agents Listing](https://aiagentslisting.com/bridgenode-mcp/badge.svg?claim=e873bccc7dc5b304630ea97d033addc5)](https://aiagentslisting.com/mcp/bridgenode-mcp)
 [![GitHub Stars](https://img.shields.io/github/stars/bridgenode-ai/bridgenode-mcp?style=social)](https://github.com/bridgenode-ai/bridgenode-mcp)
 
 **Built for AI agents** — no API keys, no registration, pay-as-you-go with Solana USDC via x402. Start free: free models and 2 free calls on paid models per client, no wallet required.
@@ -48,7 +49,7 @@ BRIDGENODE_DAILY_CAP=1.0
 
 ## Tools
 
-- `chat_completions` — AI inference (free models run without payment; the first 2 calls to a PAID model are free per client, then x402 payment is automatic)
+- `chat_completions` — AI inference (free models run without payment; the first 2 calls to a PAID model are free per client, then x402 payment is automatic). Accepts OpenAI-style `tools` / `tool_choice` — the model's answer then carries `tool_calls` (the wrapper passes arguments through unchanged)
 - `list_models` — model list (free)
 - `get_price_estimate` — estimate cost of a chat request (free)
 
