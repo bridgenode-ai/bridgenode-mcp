@@ -46,7 +46,7 @@ BRIDGENODE_DAILY_CAP=1.0             # optional — max USD per day (fail-closed
 
 ## Tools
 
-- `chat_completions` — AI inference (free models run without payment; the first 2 calls to a PAID model are free per client, then x402 payment is automatic)
+- `chat_completions` — AI inference (free models run without payment; the first 2 calls to a PAID model are free per client, then x402 payment is automatic). Accepts OpenAI-style `tools` / `tool_choice`; the model's answer then carries `tool_calls` and the next turn sends `content: null` + the tool results (`role: "tool"`)
 - `list_models` — model list with live prices (free)
 - `get_price_estimate` — estimate cost of a chat request (free)
 

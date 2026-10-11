@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.14...mcp-v1.1.0) (2026-10-11)
+
+
+### Features
+
+* **discovery:** advertise agent tool calling on every public surface (etapas.md stage 4.2) ([eee08dd](https://github.com/bridgenode-ai/bridgenode-llm/commit/eee08dddd791627085659f62475531fe1b7e2f62))
+
 ## [1.0.14](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.13...mcp-v1.0.14) (2026-09-10)
 
 
