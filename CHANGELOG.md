@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.1.0...mcp-v1.1.1) (2026-10-11)
+
+
+### Bug Fixes
+
+* **deps:** close the npm advisories in the mcp and sdk-ts locks ([f0e9a78](https://github.com/bridgenode-ai/bridgenode-llm/commit/f0e9a78e6deab8e16e513a2c9b221fe03d90f84e))
+
 ## [1.1.0](https://github.com/bridgenode-ai/bridgenode-llm/compare/mcp-v1.0.14...mcp-v1.1.0) (2026-10-11)
 
 
